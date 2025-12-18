@@ -78,7 +78,7 @@ TRACE = 0	| режим логирования (0 - ограниченный, 1 -
 Выполнить в командной строке:
 >pip install pyinstaller
 2. Перейти в каталог со скриптом и выполнить команду:
->pyinstaller --onefile --hidden-import win32timezone cs_license.py
+>pyinstaller --onefile cs_license.py
 
 В результате компиляции получится файл /dist/cs_license.exe
 
