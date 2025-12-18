@@ -95,6 +95,7 @@ class license:
             except grpc.RpcError as e:
                 print(f'{self.get_timestring()} ApiGateWay. GetLicenseState error: {e.code()}, {e.details()}')
                 self.gw_close(self.connect_period)
+                return
             else:    
                 key_id = self.get_key_number(license_state.key_id)
                 self.set_signal('key_id', key_id)
@@ -108,32 +109,33 @@ class license:
 
     # метод записывает значения сигнала в КС
     def set_signal(self, userdata, new_value):
-        if userdata in self.sig_list:
-            value = str(new_value)
-            signal_guid = self.sig_dict[userdata]
-            # print(f'{self.get_timestring()} signal: {userdata} guid: {signal.guid}')
-            # if self.check_connection():
-            try:
-                signal = self.uc_stub.GetSignalByGuid(elecont_pb2.Guid(guid = signal_guid))
-            except grpc.RpcError as e:
-                print(f'{self.get_timestring()} UserChannel. GetSignalByGuid error: {e.code()}, {e.details()}')
-                self.uc_close(self.connect_period)
-                return
-            signal_value = signal.value
-            if elecont_pb2.ElecontSignalType.Value.Name(signal.type.value) == 'VISIBLE_STRING_255':
-                signal_value = signal_value.replace('\x00', '')
-            if signal_value != value or signal.quality != 0:
-                # if signal.value != value: print(f'{userdata} value {signal.value.replace('\x00', '')}: {new_value}')
-                signal.value = str(value)
-                signal.quality = 0
-                signal.time = self.get_timestamp()
-                if self.trace: print(f'{self.get_timestring()} Set {userdata}: {value}')
+        if self.check_connection():
+            if userdata in self.sig_list:
+                value = str(new_value)
+                signal_guid = self.sig_dict[userdata]
+                # print(f'{self.get_timestring()} signal: {userdata} guid: {signal.guid}')
+                # if self.check_connection():
                 try:
-                    self.uc_stub.SetSignal(signal)
+                    signal = self.uc_stub.GetSignalByGuid(elecont_pb2.Guid(guid = signal_guid))
                 except grpc.RpcError as e:
-                    print(f'{self.get_timestring()} UserChannel. SetSignal error: {e.code()}, {e.details()}')
+                    print(f'{self.get_timestring()} UserChannel. GetSignalByGuid error: {e.code()}, {e.details()}')
                     self.uc_close(self.connect_period)
                     return
+                signal_value = signal.value
+                if elecont_pb2.ElecontSignalType.Value.Name(signal.type.value) == 'VISIBLE_STRING_255':
+                    signal_value = signal_value.replace('\x00', '')
+                if signal_value != value or signal.quality != 0:
+                    # if signal.value != value: print(f'{userdata} value {signal.value.replace('\x00', '')}: {new_value}')
+                    signal.value = str(value)
+                    signal.quality = 0
+                    signal.time = self.get_timestamp()
+                    if self.trace: print(f'{self.get_timestring()} Set {userdata}: {value}')
+                    try:
+                        self.uc_stub.SetSignal(signal)
+                    except grpc.RpcError as e:
+                        print(f'{self.get_timestring()} UserChannel. SetSignal error: {e.code()}, {e.details()}')
+                        self.uc_close(self.connect_period)
+                        return
 
     # метод вычисляет номер ключа
     def get_key_number(self, lic_str):
@@ -171,7 +173,7 @@ class license:
             self.uc_channel.close()
         except:
             pass
-        time.sleep(tSleep)    # метод закрывает соединение UserChannel
+        time.sleep(tSleep)
 
     # метод закрывает соединение ApiGateWay        
     def gw_close(self, tSleep = 0):
