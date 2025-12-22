@@ -24,13 +24,13 @@ class license:
     
     # инициализатор класса (читает параметры работы приложения)
     def __init__(self): 
-        Config = configparser.ConfigParser()
-        Config.read('settings.ini')
-        self.uc_url = Config['Default']['USERCHANNEL']
-        self.gw_url = Config['Default']['APIGATEWAY']
-        self.trace = bool(int(Config['Default']['TRACE']))
-        self.cycle_period = int(Config['Default']['CYCLE_PERIOD'])
-        self.connect_period = int(Config['Default']['CONNECT_PERIOD'])
+        config = configparser.ConfigParser()
+        config.read('settings.ini')
+        self.uc_url = config['Default']['USERCHANNEL']
+        self.gw_url = config['Default']['APIGATEWAY']
+        self.trace = bool(int(config['Default']['TRACE']))
+        self.cycle_period = int(config['Default']['CYCLE_PERIOD'])
+        self.connect_period = int(config['Default']['CONNECT_PERIOD'])
         
     # метод установливает соединение UserChannel и читает данные (сигналы)
     def uc_connect(self):
