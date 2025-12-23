@@ -1,7 +1,5 @@
 import grpc
-import api_gateway_pb2
-import api_gateway_pb2_grpc
-import time
+import api_gateway_pb2, api_gateway_pb2_grpc
 from license import license
 
 lic = license()

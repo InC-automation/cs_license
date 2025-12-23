@@ -1,0 +1,7 @@
+Activity,Name,Type,ID,Description,Band,ElUserData,ElDataType,MinValue,MaxValue,SuraDataType,Aperture,ArchEnabled,ActualTime,Comment
+true,mode,Comm:Signal:ClientSignal:Elecont,,,0,mode,int8,0,0,,0,0,1000,
+true,key_presence,Comm:Signal:ClientSignal:Elecont,,,0,key_presence,int8,0,0,,0,0,1000,
+true,mode_str,Comm:Signal:ClientSignal:Elecont,,,0,mode_str,string,0,0,,0,0,1000,
+true,key_presence_str,Comm:Signal:ClientSignal:Elecont,,,0,key_presence_str,string,0,0,,0,0,1000,
+true,time_left,Comm:Signal:ClientSignal:Elecont,,,0,time_left,uint32,0,0,,0,0,1000,
+true,key_id,Comm:Signal:ClientSignal:Elecont,,,0,key_id,string,0,0,,0,0,1000,
